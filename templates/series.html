@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Carousel with hover effect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"><link rel="stylesheet" href="static/css/style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="carousel">
+  {% for series in all_series %}
+  {% if loop.index == 1 %}
+      <div class="carousel__item carousel__item--main">
+          <img src="{{series.poster}}" alt="dog">
+          <div class="carousel__text">
+              <h3>{{series.name}}</h3>
+              <form action="{{ url_for('delete_series', series_id=series.id) }}" method="POST">
+                {% if series.deleted %}
+                    <!-- If deleted, apply a glowing effect -->
+                    <button type="submit" class="glow-button">Watched</button>
+                {% else %}
+                    <button type="submit">DONE</button>
+                {% endif %}
+            </form>
+          </div>
+      </div>
+  {% elif loop.index == 2 %}
+      <div class="carousel__item carousel__item--right">
+          <img src="{{series.poster}}" alt="dog">
+          <div class="carousel__text">
+              <h3>{{series.name}}</h3>
+              <form action="{{ url_for('delete_series', series_id=series.id) }}" method="POST">
+                {% if series.deleted %}
+                    <!-- If deleted, apply a glowing effect -->
+                    <button type="submit" class="glow-button">Watched</button>
+                {% else %}
+                    <button type="submit">DONE</button>
+                {% endif %}
+            </form>
+          </div>
+      </div>
+  {% else %}
+      <div class="carousel__item carousel__item--left">
+          <img src="{{series.poster}}" alt="dog">
+          <div class="carousel__text">
+              <h3>{{series.name}}</h3>
+              <form action="{{ url_for('delete_series', series_id=series.id) }}" method="POST">
+                {% if series.deleted %}
+                    <!-- If deleted, apply a glowing effect -->
+                    <button type="submit" class="glow-button">Watched</button>
+                {% else %}
+                    <button type="submit">DONE</button>
+                {% endif %}
+            </form>
+          </div>
+      </div>
+  {% endif %}
+{% endfor %}
+  <div class="carousel__btns">
+    <button class="carousel__btn" id="leftBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m15 4l2 2l-6 6l6 6l-2 2l-8-8z"/></svg></button>
+    <button class="carousel__btn" id="rightBtn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m9.005 4l8 8l-8 8L7 18l6.005-6L7 6z"/></svg></button>
+  </div>
+</div>
+<!-- partial -->
+  <script  src="static/js/script.js"></script>
+
+</body>
+</html>
