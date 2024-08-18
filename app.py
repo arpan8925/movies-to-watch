@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, url_for
 import requests
 from bs4 import BeautifulSoup
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 
 MOVIE_END = "https://www.91mobiles.com/entertainment/best-hindi-bollywood-movies"
@@ -10,24 +9,22 @@ SERIES_END = "https://www.91mobiles.com/entertainment/new-hindi-web-series"
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///media-watchlist.db"
- 
-class Base(DeclarativeBase):
-    pass
 
-db = SQLAlchemy(model_class=Base)
-db.init_app(app)
+db = SQLAlchemy(app)
 
 class Movie(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    poster: Mapped[str] = mapped_column(String(250), nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    __tablename__ = 'movies'
+    id = db.Column(Integer, primary_key=True)
+    name = db.Column(String(250), unique=True, nullable=False)
+    poster = db.Column(String(250), nullable=False)
+    deleted = db.Column(Boolean, default=False)
 
 class Series(db.Model):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    poster: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    __tablename__ = 'series'
+    id = db.Column(Integer, primary_key=True)
+    name = db.Column(String(250), unique=True, nullable=False)
+    poster = db.Column(String(250), unique=True, nullable=False)
+    deleted = db.Column(Boolean, default=False)
 
 with app.app_context():
     db.create_all()
@@ -74,7 +71,6 @@ def scrape_movies():
         db.session.add(new_movie)
         db.session.commit()
 
-
 def scrape_series():
     soup_response = requests.get(SERIES_END).text
     soup = BeautifulSoup(soup_response, "html.parser")
@@ -117,7 +113,6 @@ def scrape_series():
         db.session.add(new_series)
         db.session.commit()
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -150,4 +145,5 @@ def delete_series(series_id):
         db.session.commit()
     return redirect(url_for('series_page'))
 
-
+if __name__ == '__main__':
+    app.run(debug=True)
