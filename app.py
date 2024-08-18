@@ -150,5 +150,4 @@ def delete_series(series_id):
         db.session.commit()
     return redirect(url_for('series_page'))
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
